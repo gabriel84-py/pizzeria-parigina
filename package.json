@@ -1,0 +1,29 @@
+{
+  "name": "pizzeria-parigina",
+  "version": "1.0.0",
+  "description": "Site web fullstack pour la Pizzeria Parigina",
+  "main": "backend/server.js",
+  "scripts": {
+    "preinstall": "echo 'Installation des dépendances...'",
+    "install": "cd backend && npm install",
+    "postinstall": "echo 'Installation terminée !'",
+    "start": "cd backend && node server.js",
+    "dev": "cd backend && npm run dev",
+    "build": "cd backend && npm install --production",
+    "test": "echo 'No tests specified' && exit 0"
+  },
+  "keywords": [
+    "pizzeria",
+    "restaurant",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "Pizzeria Parigina",
+  "license": "PRIVATE",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}
+

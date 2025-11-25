@@ -20,9 +20,11 @@ cd pizzeria-parigina
 ### 2. Installation des dépendances
 
 ```bash
-cd backend
+# Depuis la racine du projet
 npm install
 ```
+
+Cette commande installera automatiquement toutes les dépendances dans le dossier `backend/`.
 
 ### 3. Configuration de l'environnement
 
@@ -56,9 +58,10 @@ Créez un compte sur [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atl
 ### 5. Démarrage du serveur
 
 ```bash
-cd backend
+# Depuis la racine du projet
 npm start
-# ou pour le développement avec auto-reload :
+
+# Ou pour le développement avec auto-reload :
 npm run dev
 ```
 
