@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Pizzeria Parigina</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --terracotta: #D4734A;
+            --green: #2D5016;
+            --cream: #FFF8F0;
+            --charcoal: #2C2C2C;
+            --gold: #C9A961;
+            --white: #FFFFFF;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--terracotta) 0%, var(--green) 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: var(--charcoal);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Login */
+        .login-box {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: var(--shadow-lg);
+            max-width: 450px;
+            margin: 4rem auto;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .login-box h2 {
+            text-align: center;
+            color: var(--green);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .login-box .subtitle {
+            text-align: center;
+            color: var(--charcoal);
+            opacity: 0.7;
+            margin-bottom: 2.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            color: var(--charcoal);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--terracotta);
+            box-shadow: 0 0 0 3px rgba(212, 115, 74, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1.1rem;
+            background: linear-gradient(135deg, var(--terracotta) 0%, var(--green) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            color: #dc3545;
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            padding: 0.75rem;
+            background: rgba(220, 53, 69, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        .success {
+            color: #28a745;
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            padding: 0.75rem;
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            background: var(--white);
+            border-radius: 25px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--green) 0%, #1a3a0d 100%);
+            color: var(--white);
+            padding: 2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .dashboard-header .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-logout {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-home {
+            padding: 0.75rem 1.5rem;
+            background: var(--white);
+            color: var(--green);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .dashboard-nav {
+            background: var(--cream);
+            padding: 1rem 2.5rem;
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            border-bottom: 2px solid rgba(212, 115, 74, 0.1);
+        }
+
+        .nav-btn {
+            padding: 0.9rem 1.8rem;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-weight: 600;
+            color: var(--charcoal);
+            font-size: 0.95rem;
+        }
+
+        .nav-btn:hover {
+            background: rgba(212, 115, 74, 0.1);
+            color: var(--terracotta);
+        }
+
+        .nav-btn.active {
+            background: var(--terracotta);
+            color: var(--white);
+            border-color: var(--terracotta);
+        }
+
+        .dashboard-content {
+            padding: 2.5rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            color: var(--green);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--terracotta);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: var(--shadow-sm);
+            margin-top: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+        }
+
+        th, td {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: var(--cream);
+            font-weight: 600;
+            color: var(--green);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: rgba(212, 115, 74, 0.05);
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-edit, .btn-delete, .btn-add {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-edit:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-add {
+            background: var(--green);
+            color: white;
+            margin-bottom: 1.5rem;
+            padding: 1rem 1.8rem;
+            font-size: 1rem;
+        }
+
+        .btn-add:hover {
+            background: #1a3a0d;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--cream);
+        }
+
+        .modal-header h2 {
+            color: var(--green);
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .modal-close {
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--charcoal);
+            opacity: 0.6;
+            transition: var(--transition);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--cream);
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+            background: var(--terracotta);
+            color: var(--white);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--terracotta) 0%, var(--green) 100%);
+            color: var(--white);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            opacity: 0.95;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .hour-item-admin {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--cream);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .hour-item-admin label {
+            min-width: 120px;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .hour-item-admin input {
+            flex: 1;
+            max-width: 150px;
+        }
+
+        .hour-item-admin .hour-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hour-item-admin input[type="checkbox"] {
+            width: auto;
+            max-width: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--charcoal);
+            opacity: 0.6;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-nav {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .dashboard-content {
+                padding: 1.5rem;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 0.8rem 0.5rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Login -->
+        <div id="login-box" class="login-box">
+            <h2>🍕 Admin Parigina</h2>
+            <p class="subtitle">Panneau d'administration</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn">Se connecter</button>
+                <div id="login-error" class="error" style="display: none;"></div>
+            </form>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <div class="dashboard-header">
+                <h1>Panneau d'administration</h1>
+                <div class="header-actions">
+                    <a href="/" class="btn-home">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        Retour au site
+                    </a>
+                    <button onclick="logout()" class="btn-logout">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Déconnexion
+                    </button>
+                </div>
+            </div>
+
+            <div class="dashboard-nav">
+                <button class="nav-btn active" onclick="showSection('overview')">📊 Vue d'ensemble</button>
+                <button class="nav-btn" onclick="showSection('pizzas')">🍕 Pizzas</button>
+                <button class="nav-btn" onclick="showSection('contact')">📞 Contact</button>
+                <button class="nav-btn" onclick="showSection('hours')">🕒 Horaires</button>
+                <button class="nav-btn" onclick="showSection('settings')">⚙️ Paramètres</button>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Overview -->
+                <div id="overview-section" class="section active">
+                    <h2>Vue d'ensemble</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-pizzas">0</div>
+                            <div class="stat-label">Pizzas au menu</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-categories">0</div>
+                            <div class="stat-label">Catégories</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pizzas -->
+                <div id="pizzas-section" class="section">
+                    <h2>Gestion des Pizzas</h2>
+                    <button class="btn-add" onclick="openAddPizzaModal()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Ajouter une pizza
+                    </button>
+                    <div class="table-container">
+                        <table id="pizzas-table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Prix</th>
+                                    <th>Catégorie</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pizzas-tbody">
+                                <tr>
+                                    <td colspan="4" class="loading">Chargement...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div id="contact-section" class="section">
+                    <h2>Informations de Contact</h2>
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label>Téléphone</label>
+                            <input type="tel" id="contact-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="contact-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Adresse</label>
+                            <input type="text" id="contact-address" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Lien Google Maps</label>
+                            <input type="url" id="contact-maps" placeholder="https://maps.google.com/...">
+                        </div>
+                        <button type="submit" class="btn">Enregistrer les modifications</button>
+                        <div id="contact-message" style="display: none;"></div>
+                    </form>
+                </div>
+
+                <!-- Hours -->
+                <div id="hours-section" class="section">
+                    <h2>Horaires d'ouverture</h2>
+                    <div id="hours-container">
+                        <div class="loading">Chargement...</div>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div id="settings-section" class="section">
+                    <h2>Paramètres du compte</h2>
+                    <form id="change-password-form">
+                        <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--green);">Changer le mot de passe</h3>
+                        <div class="form-group">
+                            <label>Mot de passe actuel</label>
+                            <input type="password" id="current-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nouveau mot de passe</label>
+                            <input type="password" id="new-password" required minlength="6">
+                        </div>
+                        <button type="submit" class="btn">Changer le mot de passe</button>
+                        <div id="password-message" style="display: none;"></div>
+                    </form>
+                    <hr style="margin: 2.5rem 0; border: none; border-top: 2px solid var(--cream);">
+                    <form id="change-username-form">
+                        <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--green);">Changer le nom d'utilisateur</h3>
+                        <div class="form-group">
+                            <label>Nouveau nom d'utilisateur</label>
+                            <input type="text" id="new-username" required>
+                        </div>
+                        <button type="submit" class="btn">Changer le nom d'utilisateur</button>
+                        <div id="username-message" style="display: none;"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pizza -->
+    <div id="pizza-modal" class="modal" onclick="if(event.target === this) closePizzaModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modal-title">Ajouter une pizza</h2>
+                <span class="modal-close" onclick="closePizzaModal()">&times;</span>
+            </div>
+            <form id="pizza-form">
+                <input type="hidden" id="pizza-id">
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="pizza-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Ingrédients</label>
+                    <textarea id="pizza-ingredients" required rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Prix (€)</label>
+                    <input type="number" id="pizza-price" step="0.5" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Catégorie</label>
+                    <select id="pizza-category" required>
+                        <option value="Base Rouge">Base Rouge</option>
+                        <option value="Base Blanche">Base Blanche</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Enregistrer</button>
+                <div id="pizza-message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin_js.js"></script>
+</body>
+</html>
