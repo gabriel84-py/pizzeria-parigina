@@ -17,28 +17,18 @@ npm run dev
 
 ## Configuration pour le déploiement
 
-### 📚 Configuration MongoDB Atlas (OBLIGATOIRE)
+### ✅ Base de données SQLite
 
-**Vous devez configurer MongoDB Atlas avant de déployer !**
+**Aucune configuration de base de données externe nécessaire !**
 
-👉 **Voir le guide complet :** [MONGODB_SETUP.md](./MONGODB_SETUP.md)
-
-**Résumé rapide :**
-1. Créez un compte sur [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (gratuit)
-2. Créez un cluster FREE (M0)
-3. Créez un utilisateur de base de données
-4. Autorisez l'accès réseau (0.0.0.0/0 pour la production)
-5. Copiez votre chaîne de connexion
+La base de données SQLite est incluse et se crée automatiquement dans `backend/data/app.db` lors du premier démarrage. C'est beaucoup plus simple que MongoDB !
 
 ### Variables d'environnement requises
 
 Créez un fichier `.env` dans le dossier `backend/` avec :
 
 ```env
-# MongoDB Atlas (OBLIGATOIRE pour le déploiement)
-MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/pizzeria_parigina?retryWrites=true&w=majority
-
-# Sécurité
+# Sécurité (OBLIGATOIRE)
 JWT_SECRET=votre_secret_jwt_long_et_securise_au_moins_32_caracteres
 
 # Port (optionnel, défaut: 5000)
@@ -46,9 +36,9 @@ PORT=5000
 ```
 
 **⚠️ Important :**
-- Remplacez `username` et `password` par vos identifiants MongoDB Atlas
-- Encodez les caractères spéciaux dans le mot de passe (%40 pour @, %23 pour #)
-- Ajoutez `/pizzeria_parigina` avant le `?` pour nommer votre base de données
+- Le `JWT_SECRET` est obligatoire pour la sécurité
+- La base de données SQLite sera créée automatiquement
+- Aucune configuration MongoDB nécessaire !
 
 ### Plateformes de déploiement
 
@@ -58,45 +48,45 @@ PORT=5000
 2. Installez le CLI Heroku : `npm install -g heroku`
 3. Connectez-vous : `heroku login`
 4. Créez l'app : `heroku create pizzeria-parigina`
-5. **Configurez MongoDB Atlas** (voir [MONGODB_SETUP.md](./MONGODB_SETUP.md))
-6. Configurez les variables d'environnement :
+5. Configurez les variables d'environnement :
    ```bash
-   heroku config:set MONGODB_URI="mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/pizzeria_parigina?retryWrites=true&w=majority"
    heroku config:set JWT_SECRET="votre_secret_jwt_long_et_securise"
    heroku config:set NODE_ENV=production
    ```
-7. Déployez : `git push heroku main`
-8. Ouvrez l'app : `heroku open`
+6. Déployez : `git push heroku main`
+7. Ouvrez l'app : `heroku open`
+
+**Note :** La base de données SQLite sera créée automatiquement dans le système de fichiers d'Heroku (éphémère). Pour la persistance, utilisez un addon comme Heroku Postgres ou migrez vers une autre plateforme.
 
 #### Railway
 
 1. Créez un compte sur [Railway](https://railway.app)
 2. Connectez votre repository GitHub
-3. **Configurez MongoDB Atlas** (voir [MONGODB_SETUP.md](./MONGODB_SETUP.md))
-4. Dans le dashboard Railway :
+3. Dans le dashboard Railway :
    - Allez dans **"Variables"**
-   - Ajoutez `MONGODB_URI` avec votre chaîne de connexion Atlas
    - Ajoutez `JWT_SECRET` avec un secret sécurisé
-   - Ajoutez `NODE_ENV=production`
-5. Railway détectera automatiquement le `package.json` et utilisera `npm start`
-6. Le déploiement se fera automatiquement à chaque push
+   - Ajoutez `NODE_ENV=production` (optionnel)
+4. Railway détectera automatiquement le `package.json` et utilisera `npm start`
+5. Le déploiement se fera automatiquement à chaque push
+
+**Note :** Railway fournit un système de fichiers persistant, donc votre base SQLite sera sauvegardée.
 
 #### Render
 
 1. Créez un compte sur [Render](https://render.com)
 2. Créez un nouveau "Web Service"
 3. Connectez votre repository GitHub
-4. **Configurez MongoDB Atlas** (voir [MONGODB_SETUP.md](./MONGODB_SETUP.md))
-5. Configuration :
+4. Configuration :
    - **Build Command :** `npm install`
    - **Start Command :** `npm start`
    - **Environment :** Node
    - **Node Version :** 18.x ou supérieur
-6. Dans **"Environment"**, ajoutez les variables :
-   - `MONGODB_URI` : votre chaîne de connexion Atlas
-   - `JWT_SECRET` : votre secret JWT
-   - `NODE_ENV` : `production`
-7. Cliquez sur **"Create Web Service"**
+5. Dans **"Environment"**, ajoutez les variables :
+   - `JWT_SECRET` : votre secret JWT sécurisé
+   - `NODE_ENV` : `production` (optionnel)
+6. Cliquez sur **"Create Web Service"**
+
+**Note :** Render fournit un système de fichiers persistant, donc votre base SQLite sera sauvegardée.
 
 #### Vercel / Netlify
 
@@ -114,23 +104,23 @@ Une fois déployé, vérifiez que :
 
 ## Notes importantes
 
-- ⚠️ **MongoDB Atlas OBLIGATOIRE :** Vous devez configurer MongoDB Atlas avant de déployer (voir [MONGODB_SETUP.md](./MONGODB_SETUP.md))
+- ✅ **SQLite inclus :** Aucune base de données externe nécessaire ! La base se crée automatiquement
 - ⚠️ **Sécurité :** Changez le JWT_SECRET en production (minimum 32 caractères)
-- ⚠️ **MongoDB :** Le plan FREE (M0) offre 512MB gratuits, suffisant pour commencer
 - ⚠️ **HTTPS :** La plupart des plateformes fournissent HTTPS automatiquement
 - ⚠️ **CORS :** Le serveur accepte toutes les origines. Restreignez en production si nécessaire
 - ⚠️ **Initialisation :** Les données (admin, pizzas, etc.) sont créées automatiquement au premier démarrage
+- ⚠️ **Persistance :** Sur certaines plateformes (comme Heroku), le système de fichiers est éphémère. La base sera recréée à chaque redémarrage. Utilisez Railway ou Render pour la persistance.
 
 ## 🆘 Dépannage
 
 ### Le serveur ne démarre pas
-- Vérifiez que `MONGODB_URI` est bien configuré
+- Vérifiez que `JWT_SECRET` est bien configuré
 - Vérifiez les logs de déploiement pour voir les erreurs
+- Assurez-vous que le dossier `backend/data/` peut être créé
 
-### Erreur de connexion MongoDB
-- Vérifiez que votre IP est autorisée dans MongoDB Atlas (Network Access)
-- Pour la production, utilisez 0.0.0.0/0 (toutes les IP)
-- Vérifiez que le mot de passe est correctement encodé dans l'URI
+### Erreur de base de données
+- Vérifiez que le serveur a les permissions d'écriture pour créer `backend/data/app.db`
+- Sur certaines plateformes, vous devrez peut-être créer le dossier `data` manuellement
 
 ### Les données ne s'affichent pas
 - Attendez quelques secondes après le premier démarrage (initialisation automatique)

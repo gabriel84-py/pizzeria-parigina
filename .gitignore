@@ -41,8 +41,6 @@ build/
 *.temp
 .cache/
 
-# MongoDB
-data/
 
 # Coverage
 coverage/

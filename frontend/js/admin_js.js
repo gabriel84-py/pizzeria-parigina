@@ -303,6 +303,7 @@ function toggleHourInputs(hourId) {
 
 // Mettre à jour un horaire
 async function updateHour(hourId) {
+    // hourId peut être string ou number, l'API gère les deux
     const open = document.getElementById(`open-${hourId}`).value;
     const close = document.getElementById(`close-${hourId}`).value;
     const closed = document.getElementById(`closed-${hourId}`).checked;
@@ -435,8 +436,10 @@ async function handlePizzaSubmit(e) {
     submitBtn.disabled = true;
     
     try {
-        const url = currentPizzaId ? `${API_URL}/pizzas/${currentPizzaId}` : `${API_URL}/pizzas`;
-        const method = currentPizzaId ? 'PUT' : 'POST';
+        // Utiliser l'ID numérique si disponible, sinon l'ID string
+        const pizzaId = document.getElementById('pizza-id').value || currentPizzaId;
+        const url = pizzaId ? `${API_URL}/pizzas/${pizzaId}` : `${API_URL}/pizzas`;
+        const method = pizzaId ? 'PUT' : 'POST';
         
         const response = await fetch(url, {
             method,
@@ -472,6 +475,7 @@ async function deletePizza(pizzaId) {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette pizza ? Cette action est irréversible.')) return;
     
     try {
+        // L'ID peut être string ou number, l'API gère les deux
         const response = await fetch(`${API_URL}/pizzas/${pizzaId}`, {
             method: 'DELETE',
             headers: {

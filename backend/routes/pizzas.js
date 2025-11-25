@@ -3,55 +3,83 @@ const router = express.Router();
 const Pizza = require('../models/Pizza');
 const authMiddleware = require('../middleware/auth');
 
-router.get('/', async (req, res) => {
+// Helper pour convertir les résultats SQLite en format compatible
+function formatPizza(pizza) {
+  if (!pizza) return null;
+  return {
+    _id: pizza.id.toString(),
+    id: pizza.id,
+    name: pizza.name,
+    ingredients: pizza.ingredients,
+    price: pizza.price,
+    category: pizza.category,
+    available: pizza.available === 1,
+    imageUrl: pizza.imageUrl || '',
+    order: pizza.order || 0,
+    createdAt: pizza.created_at,
+    updatedAt: pizza.updated_at
+  };
+}
+
+router.get('/', (req, res) => {
   try {
-    const pizzas = await Pizza.find().sort({ order: 1, name: 1 });
-    res.json(pizzas);
+    const pizzas = Pizza.findAll();
+    res.json(pizzas.map(formatPizza));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-router.get('/category/:category', async (req, res) => {
+router.get('/category/:category', (req, res) => {
   try {
-    const pizzas = await Pizza.find({ category: req.params.category }).sort({ order: 1, name: 1 });
-    res.json(pizzas);
+    const pizzas = Pizza.findByCategory(req.params.category);
+    res.json(pizzas.map(formatPizza));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', authMiddleware, (req, res) => {
   try {
-    const pizza = new Pizza(req.body);
-    await pizza.save();
-    res.status(201).json(pizza);
+    const pizza = Pizza.create(req.body);
+    res.status(201).json(formatPizza(pizza));
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-router.put('/:id', authMiddleware, async (req, res) => {
+// Helper pour convertir l'ID (peut être string ou number)
+function parseId(id) {
+  return typeof id === 'string' ? parseInt(id) : id;
+}
+
+router.put('/:id', authMiddleware, (req, res) => {
   try {
-    const pizza = await Pizza.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(pizza);
+    const pizza = Pizza.update(parseId(req.params.id), req.body);
+    if (!pizza) {
+      return res.status(404).json({ error: 'Pizza non trouvée' });
+    }
+    res.json(formatPizza(pizza));
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-router.delete('/:id', authMiddleware, async (req, res) => {
+router.delete('/:id', authMiddleware, (req, res) => {
   try {
-    await Pizza.findByIdAndDelete(req.params.id);
+    const result = Pizza.delete(parseId(req.params.id));
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Pizza non trouvée' });
+    }
     res.json({ message: 'Pizza supprimée' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-router.post('/init', async (req, res) => {
+router.post('/init', (req, res) => {
   try {
-    const count = await Pizza.countDocuments();
+    const count = Pizza.count();
     if (count > 0) {
       return res.status(400).json({ error: 'Pizzas déjà initialisées' });
     }
@@ -80,7 +108,7 @@ router.post('/init', async (req, res) => {
       { name: 'ROQUETTE', ingredients: 'Après cuisson : roquette, Jambon de parme 24 mois, Parmigiano reggiano 24 mois, Tomates confites, huile d\'olive, Crème balsamique', price: 17, category: 'Base Blanche', order: 21 }
     ];
 
-    await Pizza.insertMany(pizzas);
+    pizzas.forEach(pizza => Pizza.create(pizza));
     res.json({ message: 'Pizzas initialisées avec succès', count: pizzas.length });
   } catch (error) {
     res.status(500).json({ error: error.message });

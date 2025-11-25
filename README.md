@@ -5,8 +5,9 @@ Site web complet pour la Pizzeria Parigina avec backend Node.js/Express et front
 ## 📋 Prérequis
 
 - Node.js (version 14 ou supérieure)
-- MongoDB (installé localement ou compte MongoDB Atlas)
 - Un navigateur web moderne
+
+**Note :** La base de données SQLite est incluse et se crée automatiquement. Aucune configuration supplémentaire nécessaire !
 
 ## 🚀 Installation
 
@@ -26,47 +27,18 @@ npm install
 
 Cette commande installera automatiquement toutes les dépendances dans le dossier `backend/`.
 
-### 3. Configuration de l'environnement
+### 3. Configuration de l'environnement (optionnel)
 
-#### Option A : MongoDB Local (développement)
-
-Créez un fichier `.env` dans le dossier `backend` :
+Créez un fichier `.env` dans le dossier `backend/` si vous voulez personnaliser :
 
 ```env
-MONGODB_URI=mongodb://localhost:27017/pizzeria_parigina
 JWT_SECRET=votre_secret_jwt_securise
 PORT=5000
 ```
 
-#### Option B : MongoDB Atlas (recommandé pour le déploiement)
+**Note :** La base de données SQLite se crée automatiquement dans `backend/data/app.db`. Aucune configuration nécessaire !
 
-👉 **Voir le guide complet :** [MONGODB_SETUP.md](./MONGODB_SETUP.md)
-
-Créez un fichier `.env` dans le dossier `backend` :
-
-```env
-MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/pizzeria_parigina?retryWrites=true&w=majority
-JWT_SECRET=votre_secret_jwt_securise
-PORT=5000
-```
-
-**⚠️ Important pour le déploiement :** Vous devez utiliser MongoDB Atlas (cloud). Voir [MONGODB_SETUP.md](./MONGODB_SETUP.md) pour la configuration complète.
-
-### 4. Démarrage de MongoDB
-
-**Option A - MongoDB local :**
-```bash
-# Sur macOS/Linux
-mongod
-
-# Sur Windows
-net start MongoDB
-```
-
-**Option B - MongoDB Atlas :**
-Créez un compte sur [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas) et obtenez votre URL de connexion.
-
-### 5. Démarrage du serveur
+### 4. Démarrage du serveur
 
 ```bash
 # Depuis la racine du projet
@@ -78,8 +50,19 @@ npm run dev
 
 Le serveur démarre sur `http://localhost:5000`
 
+### 5. Initialisation automatique
+
+Au premier lancement, le système crée automatiquement :
+- ✅ La base de données SQLite dans `backend/data/app.db`
+- ✅ Le compte admin (username: `parigina`, password: `parigina`)
+- ✅ Les catégories de pizzas
+- ✅ Toutes les pizzas du menu
+- ✅ Les informations de contact
+- ✅ Les horaires d'ouverture
+
 ### 6. Accès au site
 
+Une fois le serveur démarré, accédez à :
 - **Site principal :** `http://localhost:5000`
 - **Panel admin :** `http://localhost:5000/admin.html`
 
@@ -113,8 +96,9 @@ Le serveur démarre sur `http://localhost:5000`
 
 ## 🛠️ Technologies
 
-- **Backend :** Node.js, Express, MongoDB, Mongoose
+- **Backend :** Node.js, Express, SQLite (better-sqlite3)
 - **Frontend :** HTML5, CSS3, JavaScript (Vanilla)
+- **Base de données :** SQLite (fichier local, pas de serveur requis)
 - **Authentification :** JWT (JSON Web Tokens)
 - **Styling :** CSS moderne avec animations
 
@@ -123,9 +107,11 @@ Le serveur démarre sur `http://localhost:5000`
 ```
 pizzeria-parigina/
 ├── backend/
-│   ├── models/          # Modèles MongoDB
+│   ├── data/            # Base de données SQLite (app.db)
+│   ├── models/          # Modèles SQLite
 │   ├── routes/          # Routes API
 │   ├── middleware/      # Middleware (auth)
+│   ├── database.js      # Configuration SQLite
 │   ├── server.js        # Serveur Express
 │   └── package.json
 ├── frontend/
@@ -143,16 +129,17 @@ pizzeria-parigina/
 
 ### Prérequis pour le déploiement
 
-1. **MongoDB Atlas** (OBLIGATOIRE) - Voir [MONGODB_SETUP.md](./MONGODB_SETUP.md)
-2. Compte sur une plateforme de déploiement (Heroku, Railway, Render, etc.)
+1. Compte sur une plateforme de déploiement (Heroku, Railway, Render, etc.)
+2. **Aucune base de données externe nécessaire !** SQLite est inclus
 
 ### Variables d'environnement de production
 
 Assurez-vous de définir dans votre plateforme de déploiement :
-- `MONGODB_URI` : URL de votre base de données MongoDB Atlas
 - `JWT_SECRET` : Secret JWT long et sécurisé (minimum 32 caractères)
 - `PORT` : Port du serveur (généralement défini automatiquement par la plateforme)
-- `NODE_ENV` : `production`
+- `NODE_ENV` : `production` (optionnel)
+
+**Note :** La base de données SQLite sera créée automatiquement dans `backend/data/app.db` lors du premier démarrage.
 
 ### Commandes de déploiement
 
@@ -175,4 +162,3 @@ Pour contribuer au projet :
 ---
 
 Fait avec ❤️ pour la Pizzeria Parigina
-
