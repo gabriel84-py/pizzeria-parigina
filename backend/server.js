@@ -13,12 +13,32 @@ app.use(bodyParser.json());
 // Servir les fichiers statiques du frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/pizzeria_parigina', {
+// Connexion MongoDB avec gestion d'erreur améliorée
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/pizzeria_parigina';
+
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('✅ MongoDB connecté'))
-.catch(err => console.error('❌ Erreur MongoDB:', err));
+.then(() => {
+  console.log('✅ MongoDB connecté');
+  console.log('📊 Base de données:', mongoose.connection.name);
+})
+.catch(err => {
+  console.error('❌ Erreur MongoDB:', err.message);
+  console.error('💡 Vérifiez votre MONGODB_URI dans le fichier .env');
+  // Le serveur continue de démarrer même si MongoDB échoue
+  // pour permettre de voir les erreurs dans les logs
+});
+
+// Gestion des événements de connexion
+mongoose.connection.on('disconnected', () => {
+  console.warn('⚠️ MongoDB déconnecté');
+});
+
+mongoose.connection.on('reconnected', () => {
+  console.log('✅ MongoDB reconnecté');
+});
 
 app.use('/api/pizzas', require('./routes/pizzas'));
 app.use('/api/categories', require('./routes/categories'));
@@ -28,7 +48,24 @@ app.use('/api/gallery', require('./routes/gallery'));
 app.use('/api/admin', require('./routes/admin'));
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'API Pizzeria Parigina opérationnelle' });
+  const dbStatus = mongoose.connection.readyState;
+  const dbStates = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting'
+  };
+  
+  res.json({ 
+    status: 'OK', 
+    message: 'API Pizzeria Parigina opérationnelle',
+    database: {
+      status: dbStates[dbStatus] || 'unknown',
+      connected: dbStatus === 1,
+      name: mongoose.connection.name || 'N/A'
+    },
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Route catch-all pour servir index.html (pour le routing côté client)
