@@ -6,7 +6,7 @@
   "scripts": {
     "preinstall": "echo 'Installation des dépendances...'",
     "install": "cd backend && npm install",
-    "postinstall": "echo 'Installation terminée !'",
+    "postinstall": "cd backend && npm rebuild better-sqlite3",
     "start": "cd backend && node server.js",
     "dev": "cd backend && npm run dev",
     "build": "cd backend && npm install --production",
