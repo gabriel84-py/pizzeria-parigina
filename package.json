@@ -6,7 +6,7 @@
   "scripts": {
     "preinstall": "echo 'Installation des dépendances...'",
     "install": "cd backend && npm install",
-    "postinstall": "cd backend && npm rebuild better-sqlite3 && npm rebuild bcryptjs",
+    "postinstall": "cd backend && npm rebuild better-sqlite3 && npm install bcryptjs",
     "start": "cd backend && node server.js",
     "dev": "cd backend && npm run dev",
     "build": "cd backend && npm install --production",
@@ -24,6 +24,8 @@
   "engines": {
     "node": ">=14.0.0",
     "npm": ">=6.0.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3"
   }
 }
-
