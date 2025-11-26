@@ -31,8 +31,3 @@ __pycache__/
 venv/
 env/
 ENV/
-
-# Database (garder la DB mais ignorer les backups)
-*.db-journal
-*.db-wal
-*.db-shm
