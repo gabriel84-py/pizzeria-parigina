@@ -1,7 +1,13 @@
 // API URL - s'adapte automatiquement selon l'environnement
-const API_URL = (window.location.origin.includes('localhost:5000') || window.location.origin.includes('127.0.0.1:5000'))
-    ? `${window.location.origin}/api`
-    : 'http://localhost:5000/api';
+// Détection environnement
+const isLocal = window.location.hostname === 'localhost' 
+    || window.location.hostname === '127.0.0.1';
+
+// URL API fiable
+const API_URL = isLocal
+    ? 'http://localhost:5000/api'                         // En local
+    : `${window.location.origin}/api`;                    // En production (Render)
+
 
 let allPizzas = [];
 let filteredPizzas = [];
