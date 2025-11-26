@@ -1,38 +1,38 @@
-# Environment variables
-.env
-backend/.env
-.env.local
-.env.*.local
-
-# Logs
-*.log
+# Node.js
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.npm
+.pnpm-debug.log*
 
-# OS files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Environment variables
+.env
+.env.local
+.env.*.local
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
 *~
 
-# Temporary files
-*.tmp
-*.temp
-.cache/
+# OS
+.DS_Store
+Thumbs.db
 
+# Python (ancien code)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
 
-# Coverage
-coverage/
-.nyc_output/
-
+# Database (garder la DB mais ignorer les backups)
+*.db-journal
+*.db-wal
+*.db-shm
