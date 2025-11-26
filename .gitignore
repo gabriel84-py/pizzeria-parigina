@@ -26,11 +26,6 @@ Thumbs.db
 *.swo
 *~
 
-# Build files
-dist/
-build/
-*.map
-
 # Temporary files
 *.tmp
 *.temp
