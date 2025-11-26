@@ -12,7 +12,10 @@ const API_URL = isLocal
 let allPizzas = [];
 let filteredPizzas = [];
 
+// Ajouter au DOMContentLoaded
 document.addEventListener('DOMContentLoaded', async () => {
+    checkViewport(); // Vérifier le viewport d'abord
+    
     await initializeData();
     await loadPizzas();
     await loadHours();
@@ -22,6 +25,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupMobileMenu();
     setupScrollAnimations();
     setupNavbarScroll();
+    
+    console.log('✅ Site chargé et initialisé');
 });
 
 async function initializeData() {
@@ -55,66 +60,8 @@ async function initializeData() {
     }
 }
 
-async function loadPizzas() {
-    const loadingEl = document.getElementById('pizzas-loading');
-    const gridEl = document.getElementById('pizzas-grid');
-    
-    try {
-        if (loadingEl) loadingEl.style.display = 'block';
-        if (gridEl) gridEl.style.display = 'none';
-        
-        const response = await fetch(`${API_URL}/pizzas`);
-        allPizzas = await response.json();
-        filteredPizzas = [...allPizzas];
-        
-        if (loadingEl) loadingEl.style.display = 'none';
-        if (gridEl) gridEl.style.display = 'grid';
-        
-        displayPizzas(filteredPizzas);
-    } catch (error) {
-        console.error('Erreur chargement pizzas:', error);
-        if (loadingEl) loadingEl.style.display = 'none';
-        if (gridEl) {
-            gridEl.style.display = 'grid';
-            gridEl.innerHTML = '<div class="no-results"><p>Erreur de chargement. Veuillez réessayer.</p></div>';
-        }
-    }
-}
 
-function displayPizzas(pizzas) {
-    const grid = document.getElementById('pizzas-grid');
-    const noResults = document.getElementById('no-results');
-    
-    if (!grid) return;
-    
-    if (pizzas.length === 0) {
-        grid.style.display = 'none';
-        if (noResults) noResults.style.display = 'block';
-        return;
-    }
-    
-    grid.style.display = 'grid';
-    if (noResults) noResults.style.display = 'none';
-    
-    // Animation d'apparition
-    grid.innerHTML = pizzas.map((pizza, index) => `
-        <div class="pizza-card fade-in" style="animation-delay: ${index * 0.1}s">
-            <div class="pizza-header">
-                <h3 class="pizza-name">${escapeHtml(pizza.name)}</h3>
-                <span class="pizza-price">${pizza.price.toFixed(2)}€</span>
-            </div>
-            <p class="pizza-ingredients">${escapeHtml(pizza.ingredients)}</p>
-            <span class="pizza-category">${escapeHtml(pizza.category)}</span>
-        </div>
-    `).join('');
-    
-    // Trigger animation
-    setTimeout(() => {
-        document.querySelectorAll('.pizza-card').forEach(card => {
-            card.classList.add('visible');
-        });
-    }, 100);
-}
+
 
 function escapeHtml(text) {
     const div = document.createElement('div');
@@ -270,6 +217,11 @@ function setupEventListeners() {
     }
 }
 
+// Ajouter dans frontend/js/main.js
+// Remplacer la fonction setupSmoothScroll par cette version améliorée
+
+// Remplacer la fonction setupSmoothScroll dans frontend/js/main.js
+
 function setupSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -278,6 +230,7 @@ function setupSmoothScroll() {
             if (targetId === '#') return;
             
             const target = document.querySelector(targetId);
+            
             if (target) {
                 const offsetTop = target.offsetTop - 80;
                 window.scrollTo({ 
@@ -291,7 +244,10 @@ function setupSmoothScroll() {
                     navMenu.classList.remove('active');
                     const toggle = document.getElementById('mobile-menu-toggle');
                     if (toggle) toggle.classList.remove('active');
+                    document.body.style.overflow = '';
                 }
+            } else {
+                console.warn(`Target not found: ${targetId}`);
             }
         });
     });
@@ -300,42 +256,31 @@ function setupSmoothScroll() {
     window.addEventListener('scroll', updateActiveNavLink);
 }
 
+// Fonction pour mettre à jour les liens actifs
 function updateActiveNavLink() {
-    const sections = document.querySelectorAll('section[id]');
+    const sections = document.querySelectorAll('section[id], #hours');
     const navLinks = document.querySelectorAll('.nav-link');
     
     let current = '';
+    const scrollPos = window.pageYOffset + 150;
+    
     sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100;
-        if (window.pageYOffset >= sectionTop) {
-            current = section.getAttribute('id');
+        if (!section.id) return;
+        
+        const sectionTop = section.offsetTop;
+        const sectionBottom = sectionTop + section.offsetHeight;
+        
+        if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+            current = section.id;
         }
     });
     
     navLinks.forEach(link => {
         link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
+        const href = link.getAttribute('href');
+        
+        if (href === `#${current}`) {
             link.classList.add('active');
-        }
-    });
-}
-
-function setupMobileMenu() {
-    const toggle = document.getElementById('mobile-menu-toggle');
-    const menu = document.getElementById('nav-menu');
-    
-    if (!toggle || !menu) return;
-    
-    toggle.addEventListener('click', () => {
-        menu.classList.toggle('active');
-        toggle.classList.toggle('active');
-    });
-    
-    // Fermer le menu en cliquant à l'extérieur
-    document.addEventListener('click', (e) => {
-        if (!menu.contains(e.target) && !toggle.contains(e.target)) {
-            menu.classList.remove('active');
-            toggle.classList.remove('active');
         }
     });
 }
@@ -384,3 +329,236 @@ function setupNavbarScroll() {
         lastScroll = currentScroll;
     });
 }
+
+
+// Corrections pour frontend/js/main.js
+// Remplacer la fonction displayPizzas par cette version optimisée
+
+function displayPizzas(pizzas) {
+    const grid = document.getElementById('pizzas-grid');
+    const noResults = document.getElementById('no-results');
+    
+    if (!grid) {
+        console.error('Element pizzas-grid not found');
+        return;
+    }
+    
+    // Afficher/masquer les éléments appropriés
+    if (pizzas.length === 0) {
+        grid.style.display = 'none';
+        if (noResults) noResults.style.display = 'block';
+        return;
+    }
+    
+    // S'assurer que la grille est visible
+    grid.style.display = 'grid';
+    if (noResults) noResults.style.display = 'none';
+    
+    // Générer le HTML des pizzas
+    grid.innerHTML = pizzas.map((pizza, index) => {
+        const delay = Math.min(index * 0.05, 0.5); // Limiter le délai max
+        return `
+            <div class="pizza-card fade-in" style="animation-delay: ${delay}s; opacity: 0;">
+                <div class="pizza-header">
+                    <h3 class="pizza-name">${escapeHtml(pizza.name)}</h3>
+                    <span class="pizza-price">${pizza.price.toFixed(2)}€</span>
+                </div>
+                <p class="pizza-ingredients">${escapeHtml(pizza.ingredients)}</p>
+                <span class="pizza-category">${escapeHtml(pizza.category)}</span>
+            </div>
+        `;
+    }).join('');
+    
+    // Forcer le reflow pour que l'animation fonctionne
+    void grid.offsetWidth;
+    
+    // Trigger animations progressivement
+    const cards = grid.querySelectorAll('.pizza-card');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.classList.add('visible');
+        }, index * 50); // Animation progressive
+    });
+    
+    // Scroll vers la section menu si on vient de filtrer (mobile friendly)
+    if (window.innerWidth <= 768 && pizzas.length > 0) {
+        // Petit délai pour laisser le contenu se charger
+        setTimeout(() => {
+            const menuSection = document.getElementById('menu');
+            if (menuSection) {
+                const rect = menuSection.getBoundingClientRect();
+                const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+                
+                // Ne scroller que si pas visible
+                if (!isVisible && pizzas !== allPizzas) {
+                    const offsetTop = menuSection.offsetTop - 80;
+                    window.scrollTo({ 
+                        top: offsetTop, 
+                        behavior: 'smooth' 
+                    });
+                }
+            }
+        }, 100);
+    }
+}
+
+// Améliorer la fonction loadPizzas pour mobile
+async function loadPizzas() {
+    const loadingEl = document.getElementById('pizzas-loading');
+    const gridEl = document.getElementById('pizzas-grid');
+    const noResults = document.getElementById('no-results');
+    
+    try {
+        // Afficher le loader
+        if (loadingEl) {
+            loadingEl.style.display = 'flex';
+            loadingEl.style.justifyContent = 'center';
+            loadingEl.style.alignItems = 'center';
+        }
+        if (gridEl) gridEl.style.display = 'none';
+        if (noResults) noResults.style.display = 'none';
+        
+        // Charger les données
+        const response = await fetch(`${API_URL}/pizzas`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        allPizzas = await response.json();
+        filteredPizzas = [...allPizzas];
+        
+        // Masquer le loader
+        if (loadingEl) loadingEl.style.display = 'none';
+        
+        // Afficher les pizzas
+        displayPizzas(filteredPizzas);
+        
+        // Log pour debug mobile
+        console.log(`✅ ${allPizzas.length} pizzas chargées avec succès`);
+        
+    } catch (error) {
+        console.error('❌ Erreur chargement pizzas:', error);
+        
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (gridEl) {
+            gridEl.style.display = 'grid';
+            gridEl.innerHTML = `
+                <div style="
+                    grid-column: 1;
+                    text-align: center;
+                    padding: 2rem;
+                    background: var(--cream);
+                    border-radius: 15px;
+                    border: 2px solid var(--terracotta);
+                ">
+                    <p style="color: var(--charcoal); margin-bottom: 1rem;">
+                        ⚠️ Erreur de chargement des pizzas
+                    </p>
+                    <button 
+                        onclick="location.reload()" 
+                        style="
+                            padding: 0.8rem 1.5rem;
+                            background: var(--terracotta);
+                            color: white;
+                            border: none;
+                            border-radius: 25px;
+                            cursor: pointer;
+                            font-weight: 600;
+                        "
+                    >
+                        Réessayer
+                    </button>
+                </div>
+            `;
+        }
+    }
+}
+
+// Améliorer setupMobileMenu pour plus de fiabilité
+function setupMobileMenu() {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('nav-menu');
+    
+    if (!toggle || !menu) {
+        console.warn('Mobile menu elements not found');
+        return;
+    }
+    
+    // Toggle menu
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menu.classList.toggle('active');
+        toggle.classList.toggle('active');
+        
+        // Empêcher le scroll du body quand le menu est ouvert
+        if (menu.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Fermer le menu quand on clique sur un lien
+    menu.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            menu.classList.remove('active');
+            toggle.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
+    
+    // Fermer le menu en cliquant à l'extérieur
+    document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+            if (menu.classList.contains('active')) {
+                menu.classList.remove('active');
+                toggle.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+    });
+    
+    // Fermer avec Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && menu.classList.contains('active')) {
+            menu.classList.remove('active');
+            toggle.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+// Ajouter une fonction pour vérifier le viewport au chargement
+function checkViewport() {
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+        console.log('📱 Mode mobile détecté');
+        
+        // S'assurer que les sections sont visibles
+        document.querySelectorAll('section').forEach(section => {
+            section.style.maxWidth = '100%';
+            section.style.overflow = 'visible';
+        });
+        
+        // Vérifier que la grille de pizzas existe
+        const grid = document.getElementById('pizzas-grid');
+        if (grid) {
+            grid.style.maxWidth = '100%';
+            grid.style.padding = '0 15px';
+        }
+    }
+}
+
+
+
+// Gérer le resize de la fenêtre
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        checkViewport();
+    }, 250);
+});

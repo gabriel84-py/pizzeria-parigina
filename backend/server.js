@@ -57,8 +57,8 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log('🍕 Serveur démarré sur le port ' + PORT);
-  console.log('🌐 Site accessible sur http://localhost:' + PORT);
+  console.log('🌐 Site accessible sur http://0.0.0.0:' + PORT);
   console.log('💾 Base de données SQLite : backend/data/app.db');
 });

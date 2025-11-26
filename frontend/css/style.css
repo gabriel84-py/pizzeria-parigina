@@ -904,24 +904,93 @@ section {
     transform: translateY(0);
 }
 
-/* Responsive */
+/* Corrections critiques pour mobile - À ajouter à la fin de frontend/css/style.css */
+
+/* ==============================================
+   CORRECTIONS CRITIQUES MOBILE
+   ============================================== */
+
+/* Fix: Empêcher le débordement horizontal */
+* {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Fix: Container responsive */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* ==============================================
+   CORRECTIONS SPÉCIFIQUES MOBILE (< 768px)
+   ============================================== */
+
 @media (max-width: 768px) {
+    
+    /* Fix 1: Hero responsive */
+    .hero {
+        min-height: 100vh;
+        height: auto;
+        padding: 100px 15px 40px;
+    }
+
+    .hero-content {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 10px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+        word-wrap: break-word;
+    }
+
+    /* Fix 2: Navigation mobile CRITIQUE */
+    .navbar {
+        padding: 0.8rem 0;
+    }
+
+    .navbar .container {
+        padding: 0 15px;
+    }
+
+    .nav-brand {
+        font-size: 1.4rem;
+        letter-spacing: 1px;
+    }
+
     .mobile-menu-toggle {
         display: flex;
+        z-index: 1001;
     }
 
     .nav-menu {
         position: fixed;
-        top: 70px;
+        top: 60px;
         left: -100%;
         width: 100%;
-        height: calc(100vh - 70px);
+        height: calc(100vh - 60px);
         background: var(--white);
         flex-direction: column;
-        padding: 2rem;
-        gap: 1.5rem;
-        transition: var(--transition);
+        padding: 2rem 1rem;
+        gap: 1rem;
+        transition: left 0.3s ease;
         box-shadow: var(--shadow-lg);
+        overflow-y: auto;
+        z-index: 999;
     }
 
     .nav-menu.active {
@@ -929,214 +998,80 @@ section {
     }
 
     .nav-link {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         padding: 1rem 0;
         width: 100%;
         text-align: center;
+        display: block;
     }
 
-    .hero {
-        min-height: 500px;
-        padding-top: 80px;
+    /* Fix 3: Section Menu - CORRECTION PRINCIPALE */
+    .menu-section {
+        padding: 4rem 0;
+        overflow-x: hidden;
     }
 
-    .hero-buttons {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .btn-primary,
-    .btn-secondary {
-        width: 100%;
-        justify-content: center;
+    .section-header {
+        margin-bottom: 2rem;
+        padding: 0 15px;
     }
 
     .section-title {
         font-size: 2rem;
-    }
-
-    .pizzas-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .menu-controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .search-box {
-        max-width: 100%;
-    }
-
-    .category-filters {
-        justify-content: center;
-    }
-
-    .hours-card {
-        grid-column: span 1;
-    }
-
-    .about-features {
-        grid-template-columns: 1fr;
-    }
-
-    .contact-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 0 15px;
-    }
-
-    section {
-        padding: 4rem 0;
-    }
-
-    .pizza-card {
-        padding: 1.5rem;
-    }
-
-    .extras-section {
-        padding: 2rem 1.5rem;
-    }
-}
-
-
-/* Améliorations Responsivité Mobile - À ajouter à frontend/css/style.css */
-
-/* Optimisations globales mobile */
-@media (max-width: 768px) {
-    body {
-        font-size: 14px;
-    }
-
-    .container {
-        padding: 0 15px;
-    }
-
-    /* Navigation améliorée */
-    .navbar {
-        padding: 0.8rem 0;
-    }
-
-    .nav-brand {
-        font-size: 1.5rem;
-        letter-spacing: 1px;
-    }
-
-    .brand-icon {
-        font-size: 1.2rem;
-    }
-
-    .nav-menu {
-        top: 65px;
-        padding: 1.5rem;
-        gap: 1rem;
-    }
-
-    .nav-link {
-        font-size: 1.1rem;
-        padding: 0.8rem 0;
-    }
-
-    /* Hero Section amélioré */
-    .hero {
-        min-height: 70vh;
-        padding: 100px 20px 40px;
-    }
-
-    .hero-badge {
-        font-size: 0.8rem;
-        padding: 0.4rem 1.2rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .hero-title {
-        font-size: clamp(2.5rem, 12vw, 4rem);
-        letter-spacing: 2px;
-        margin-bottom: 1rem;
-    }
-
-    .hero-subtitle {
-        font-size: clamp(1rem, 4vw, 1.4rem);
         margin-bottom: 0.5rem;
     }
 
-    .hero-text {
-        font-size: clamp(0.9rem, 3vw, 1.1rem);
-        margin-bottom: 2rem;
-    }
-
-    .hero-buttons {
-        flex-direction: column;
-        gap: 1rem;
-        width: 100%;
-        padding: 0 10px;
-    }
-
-    .btn-primary,
-    .btn-secondary {
-        width: 100%;
-        justify-content: center;
-        padding: 1rem 2rem;
-        font-size: 1rem;
-    }
-
-    /* Sections améliorées */
-    section {
-        padding: 4rem 0;
-    }
-
-    .section-title {
-        font-size: clamp(2rem, 8vw, 2.8rem);
-        margin-bottom: 0.8rem;
-    }
-
-    .section-title::after {
-        width: 60px;
-        height: 3px;
-        margin: 0.8rem auto 0;
-    }
-
     .section-subtitle {
-        font-size: 1rem;
-        margin-top: 0.8rem;
+        font-size: 0.95rem;
     }
 
-    /* Menu Section optimisée */
+    /* Fix 4: Menu Controls - CORRECTION CRITIQUE */
     .menu-controls {
         flex-direction: column;
         gap: 1rem;
         margin-bottom: 2rem;
+        padding: 0 15px;
+        width: 100%;
     }
 
     .search-box {
+        width: 100%;
         min-width: 100%;
         max-width: 100%;
+        margin: 0;
     }
 
     #pizza-search {
+        width: 100%;
         padding: 0.9rem 0.9rem 0.9rem 2.8rem;
         font-size: 0.95rem;
+        border-radius: 25px;
     }
 
     .search-icon {
-        left: 0.8rem;
+        left: 1rem;
     }
 
+    /* Fix 5: Category Filters responsive */
     .category-filters {
+        width: 100%;
         flex-wrap: wrap;
         gap: 0.5rem;
         justify-content: center;
     }
 
     .filter-btn {
-        padding: 0.7rem 1.5rem;
-        font-size: 0.9rem;
+        padding: 0.7rem 1.2rem;
+        font-size: 0.85rem;
         flex: 1 1 auto;
         min-width: calc(50% - 0.25rem);
+        max-width: calc(50% - 0.25rem);
+        text-align: center;
+    }
+
+    /* Fix 6: Sort controls */
+    .sort-controls {
+        width: 100%;
     }
 
     .sort-controls select {
@@ -1145,79 +1080,82 @@ section {
         font-size: 0.9rem;
     }
 
-    /* Pizzas Grid optimisée */
+    /* Fix 7: Pizzas Grid - CORRECTION IMPORTANTE */
     .pizzas-grid {
+        display: grid;
         grid-template-columns: 1fr;
         gap: 1.5rem;
-        margin-bottom: 3rem;
+        padding: 0 15px;
+        margin-bottom: 2rem;
     }
 
     .pizza-card {
+        width: 100%;
         padding: 1.5rem;
+        margin: 0;
     }
 
     .pizza-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.8rem;
-        margin-bottom: 1rem;
+        gap: 0.5rem;
     }
 
     .pizza-name {
-        font-size: 1.3rem;
+        font-size: 1.25rem;
         width: 100%;
+        word-wrap: break-word;
     }
 
     .pizza-price {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         align-self: flex-end;
     }
 
     .pizza-ingredients {
         font-size: 0.9rem;
-        min-height: auto;
         line-height: 1.6;
+        word-wrap: break-word;
     }
 
     .pizza-category {
-        padding: 0.35rem 0.9rem;
         font-size: 0.75rem;
+        padding: 0.3rem 0.8rem;
     }
 
-    /* Extras Section améliorée */
+    /* Fix 8: Extras Section */
     .extras-section {
-        margin-top: 3rem;
-        padding: 2rem 1.5rem;
+        margin-top: 2rem;
+        padding: 2rem 15px;
     }
 
     .extras-title {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         margin-bottom: 1.5rem;
     }
 
     .extras-grid {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 0.8rem;
     }
 
     .extra-item {
         padding: 1rem 1.2rem;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
-    .extra-item span:last-child {
-        font-size: 1rem;
-    }
-
-    /* About Section améliorée */
+    /* Fix 9: About Section */
     .about-section {
         padding: 4rem 0;
     }
 
+    .about-content {
+        padding: 0 15px;
+    }
+
     .about-description {
         font-size: 1rem;
-        margin-bottom: 1.2rem;
-        line-height: 1.7;
+        margin-bottom: 1rem;
     }
 
     .about-features {
@@ -1230,24 +1168,15 @@ section {
         padding: 1.5rem;
     }
 
-    .feature-icon {
-        font-size: 2.5rem;
-        margin-bottom: 0.8rem;
+    /* Fix 10: Contact Section */
+    .contact-section {
+        padding: 4rem 0;
     }
 
-    .feature-item h3 {
-        font-size: 1.2rem;
-        margin-bottom: 0.4rem;
-    }
-
-    .feature-item p {
-        font-size: 0.95rem;
-    }
-
-    /* Contact Section améliorée */
     .contact-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
+        padding: 0 15px;
     }
 
     .info-card {
@@ -1257,7 +1186,6 @@ section {
     .info-icon {
         width: 56px;
         height: 56px;
-        margin: 0 auto 1.2rem;
     }
 
     .info-icon svg {
@@ -1267,39 +1195,28 @@ section {
 
     .info-card h3 {
         font-size: 1.3rem;
-        margin-bottom: 0.8rem;
     }
 
     .info-card p {
         font-size: 1rem;
-        margin-bottom: 1.2rem;
+        word-wrap: break-word;
     }
 
-    .btn-secondary {
-        padding: 0.75rem 1.5rem;
-        font-size: 0.9rem;
-    }
-
-    /* Hours Card améliorée */
+    /* Fix 11: Hours Card */
     .hours-card {
         grid-column: span 1;
         padding: 2rem 1.5rem;
     }
 
     .hours-card h3 {
-        font-size: 1.6rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .hours-list {
-        gap: 0.8rem;
+        font-size: 1.5rem;
     }
 
     .hour-item {
-        padding: 0.9rem 1.2rem;
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        padding: 0.8rem 1rem;
+        gap: 0.3rem;
     }
 
     .hour-day {
@@ -1308,28 +1225,44 @@ section {
     }
 
     .hour-time {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         width: 100%;
         text-align: right;
     }
 
-    /* Footer amélioré */
+    /* Fix 12: Footer */
     .footer {
         padding: 2.5rem 0;
     }
 
     .footer p {
-        font-size: 0.95rem;
-        margin: 0.4rem 0;
+        font-size: 0.9rem;
+        padding: 0 15px;
     }
 
-    .admin-link {
-        margin-top: 1.2rem;
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
+    /* Fix 13: Buttons responsive */
+    .btn-primary,
+    .btn-secondary {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        width: 100%;
+        justify-content: center;
     }
 
-    /* Scroll indicator */
+    .hero-buttons {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    /* Fix 14: Loading et No Results */
+    .loading-spinner,
+    .no-results {
+        padding: 3rem 15px;
+        width: 100%;
+    }
+
+    /* Fix 15: Scroll Indicator */
     .scroll-indicator {
         bottom: 1.5rem;
     }
@@ -1338,17 +1271,25 @@ section {
         width: 20px;
         height: 35px;
     }
-
-    .mouse::before {
-        width: 3px;
-        height: 6px;
-    }
 }
 
-/* Petits écrans (< 480px) */
+/* ==============================================
+   PETITS ÉCRANS (< 480px)
+   ============================================== */
+
 @media (max-width: 480px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .hero {
+        padding: 90px 10px 30px;
+    }
+
     .hero-title {
-        font-size: 2.2rem;
+        font-size: 2rem;
+        letter-spacing: 1px;
     }
 
     .section-title {
@@ -1357,14 +1298,11 @@ section {
 
     .filter-btn {
         min-width: 100%;
+        max-width: 100%;
     }
 
     .pizza-card {
         padding: 1.2rem;
-    }
-
-    .pizza-header {
-        gap: 0.6rem;
     }
 
     .pizza-name {
@@ -1372,41 +1310,42 @@ section {
     }
 
     .pizza-price {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
+    }
+
+    .pizza-ingredients {
+        font-size: 0.85rem;
     }
 
     .extras-section {
-        padding: 1.5rem 1rem;
+        padding: 1.5rem 10px;
+    }
+
+    .extra-item {
+        padding: 0.8rem 1rem;
     }
 
     .info-card {
-        padding: 1.5rem 1.2rem;
+        padding: 1.5rem 1rem;
     }
 
     .hours-card {
-        padding: 1.5rem 1.2rem;
+        padding: 1.5rem 1rem;
     }
 }
 
-/* Très petits écrans (< 360px) */
+/* ==============================================
+   TRÈS PETITS ÉCRANS (< 360px)
+   ============================================== */
+
 @media (max-width: 360px) {
     .container {
-        padding: 0 12px;
-    }
-
-    .hero {
-        padding: 90px 15px 30px;
+        padding-left: 12px;
+        padding-right: 12px;
     }
 
     .hero-title {
-        font-size: 2rem;
-        letter-spacing: 1px;
-    }
-
-    .btn-primary,
-    .btn-secondary {
-        padding: 0.9rem 1.5rem;
-        font-size: 0.95rem;
+        font-size: 1.8rem;
     }
 
     .pizza-card {
@@ -1414,21 +1353,26 @@ section {
     }
 
     .extras-section {
-        padding: 1.2rem 0.8rem;
+        padding: 1.2rem 8px;
     }
 
     .extra-item {
-        padding: 0.8rem 1rem;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        padding: 0.7rem 0.8rem;
     }
 }
 
-/* Optimisation du touch sur mobile */
+/* ==============================================
+   OPTIMISATIONS TOUCH
+   ============================================== */
+
 @media (hover: none) and (pointer: coarse) {
     /* Augmenter les zones tactiles */
     .nav-link {
-        padding: 1rem 0;
-        min-height: 44px;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .filter-btn {
@@ -1440,7 +1384,7 @@ section {
         min-height: 48px;
     }
 
-    /* Désactiver les effets hover sur mobile */
+    /* Désactiver les effets hover */
     .pizza-card:hover {
         transform: none;
     }
@@ -1450,41 +1394,111 @@ section {
         transform: none;
     }
 
-    /* Améliorer le feedback tactile */
-    .filter-btn:active {
-        transform: scale(0.98);
-        opacity: 0.9;
-    }
-
+    /* Feedback tactile */
+    .filter-btn:active,
     .btn-primary:active,
     .btn-secondary:active {
         transform: scale(0.98);
+        opacity: 0.9;
     }
 }
 
-/* Mode paysage mobile */
+/* ==============================================
+   MODE PAYSAGE MOBILE
+   ============================================== */
+
 @media (max-width: 768px) and (orientation: landscape) {
     .hero {
         min-height: 100vh;
-    }
-
-    .hero-content {
-        padding: 0 15px;
+        padding: 80px 15px 30px;
     }
 
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     .hero-buttons {
         flex-direction: row;
         flex-wrap: wrap;
+        gap: 0.8rem;
     }
 
     .btn-primary,
     .btn-secondary {
         width: auto;
         flex: 1;
-        min-width: 200px;
+        min-width: 150px;
+    }
+}
+
+/* ==============================================
+   FIX FINAL: Empêcher tout débordement
+   ============================================== */
+
+@media (max-width: 768px) {
+    * {
+        max-width: 100%;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .section-header,
+    .menu-controls,
+    .pizzas-grid,
+    .extras-section,
+    .contact-grid,
+    .about-features {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+}
+
+/* Ajouter à la fin de frontend/css/style.css */
+
+/* Fix pour le scroll vers les horaires */
+.hours-card {
+    scroll-margin-top: 100px;
+}
+
+/* Alternative: créer une ancre invisible pour les horaires */
+#hours-anchor {
+    position: absolute;
+    top: -100px;
+    visibility: hidden;
+}
+
+/* S'assurer que la carte des horaires est bien visible */
+.contact-grid .hours-card {
+    position: relative;
+}
+
+/* Ajouter à la fin de frontend/css/style.css */
+
+/* Fix pour le scroll vers les horaires */
+#hours {
+    scroll-margin-top: 80px;
+    position: relative;
+    pointer-events: none;
+}
+
+.hours-card {
+    scroll-margin-top: 80px;
+}
+
+/* S'assurer que la carte des horaires occupe bien 2 colonnes sur desktop */
+.contact-grid .hours-card {
+    grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+    .hours-card {
+        grid-column: span 1;
+    }
+    
+    #hours {
+        grid-column: span 1;
     }
 }
